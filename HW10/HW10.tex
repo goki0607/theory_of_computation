@@ -1,0 +1,105 @@
+\documentclass [10pt]{article}
+\textheight	8.7in
+\textwidth	6.5in
+\topmargin	    0in
+\oddsidemargin  0in
+\evensidemargin 0in
+\baselineskip 15pt
+
+\usepackage{amssymb,amsmath,amstext}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\newcommand\vartextvisiblespace[1][.7em]{%
+  \makebox[#1]{%
+    \kern.07em
+    \vrule height.3ex
+    \hrulefill
+    \vrule height.3ex
+    \kern.07em
+  }% \langle -- don't forget this one!
+}
+
+\newcommand{\spacechar}{\vartextvisiblespace}% For ease-of-use
+
+\newcommand{\reduces}{\preceq}% Just more intuitive
+
+\begin{document}
+\title{Theory of Computation Assignment no. 10}
+\author{Goktug Saatcioglu}
+\date{}
+\maketitle
+
+\begin{enumerate}
+	\item[\textbf{(1)}]Let $A$ be a language such that $A\in Co-RE$ which means that $A^{c}\in RE$. This means that the complement of $A$ can be identified/recognized by a Turing machine $M^{\prime}$. Furthermore, the complement of $A$ is all words such that $w\in A^{c}$ then $M^{\prime}$ accepts and $w\notin A^{c}$ then $M$ rejects or loops forever. Let $M$ be another Turing machine such that we check if $w\notin A$ (meaning $w\in A^{c}$) and if $w\in A$ (meaning $w\notin A^{c}$). Thus, $M$ is an algorithm that simulates the running of a word $w$ on $M$ for $i=1,2,3,\dots,\infty$ steps and if at any point $M$ accepts then $M^{\prime}$ rejects and if at any point $M$ rejects then $M^{\prime}$ accepts. Also, if $M$ loops forever then $M^{\prime}$ will also loop forever. From this we see that if $w\notin A$, then $M^{\prime}$ will accept since if $w\notin A$ then $M$ will reject which will mean $M^{\prime}$ will accept and $w\in A^{c}$. Similary, if $w\in A$ then $M^{\prime}$ will reject since if $w\in A$ then $M$ will accept which will mean $M^{\prime}$ will reject $w\notin A^{c}$. Finally, if $M$ loops forever then we do not know if $w\in A$ or $w\notin A$. However, since we assume $A\in Co-RE$ we must assume that we can identify all $w\notin A$. This means that $M$ may also loop forever if $w\in A$ which means that $M^{\prime}$ also loops forever for $w\notin A^{c}$. Thus, the forward direction has been proved ($\implies$). For the backward direction ($\impliedby$) where we first assume the existence of such a machine $M$ (as described in the question), we can simply create $M^{\prime}$ by using the algorithm above. Since $M^{\prime}$ using this construction decides all words $w\notin A$ then we know that we have decided all words $w\in A^{c}$ (and have not decided $w\in A$ and $w\notin A^{c}$) which means we identify/recogize $A^{c}$. This then implies that $A\in Co-RE$.
+	\item[\textbf{(2)}]
+	\begin{enumerate}
+		\item[a.]If $A\reduces B$ then there exists a truth preserving reduction from $A$ to $B$. Furthermore, if $B\reduces C$ then there exits a truth preserving reduction from $B$ to $C$. Thus, we know that there is an algorithm $M_{1}$ (i.e. Turing machine) that takes an input word $x$ and outputs a word $y$ such that if $x\in A$ then $y\in B$ and if $x\notin A$ then $y\notin B$. We also know that there is an algorithm $M_{2}$ (i.e. Turing Machine) that takes an input word $y$ and outputs a word $z$ such that if $y\in B$ then $z\in C$ and if $y\notin B$ then $z\notin C$. Combining $M_{1}$ and $M_{2}$ together, we can create an algorithm $M_{3}$ (i.e. Turing machine) that takes an input $x$ and first simulates $M_{1}$ to get an output $y$. Then $M_{3}$ will simulate $M_{2}$ on $y$ to get $z$. Firstly, since $M_{1}$ and $M_{2}$ we know that $M_{3}$ is decidable. Secondly, we see that if $x\in A$ then $y\in B$ then $z\in C$ (or if $x\notin A$ then $y\notin B$ then $z\notin C$) which implies that $x\in A$ then $z\in C$ (or $x\notin A$ then $z\notin C$) which proves that $\reduces$ is transitive. Thus, we conclude if $A\reduces B$ and $B\reduces C$ then $A\reduces C$.
+		\item[b.]We begin by proving if $A\reduces B$ then $A^{c}\reduces B^{c}$. If $A\reduces B$ then there exists a truth preserving reduction from $A$ to $B$ which means that we know that there is an algorithm (i.e. Turing machine) that takes an input word $x$ and outputs a word $y$ such that if $x\in A$ then $y\in B$ and if $x\notin A$ then $y\notin B$. We then note that $x\in A\iff x\notin A^{c}$ and $y\in B\iff y\notin B^{c}$. Thus, we have proved that if $x\notin A^{c}$ then $y\notin B^{c}$ and if $x\in A^{c}$ then $y\in B^{c}$ which completes the proof. We conclude that if $A\reduces B$ then $A^{c}\reduces B^{c}$. Next, we note that if $B\in Co-RE$ then $B^{c}\in RE$. Since if $A\reduces B$ then $A^{c}\reduces B^{c}$ (from the above proof) and $B^{c}\in RE$ then $A^{c}\in RE$ which means that $A\in Co-RE$. Thus, we conclude if $B\in Co-RE$ and $A\reduces B$ then $A\in Co-RE$.
+		\item[c.]This is simply the contrapositive of the statement from part b. Thus, it follows that from b. that if $A\notin Co-RE$ and $A\reduces B$ then $B\notin Co-RE$ since if $B\in Co-RE$ then $A\in Co-RE$ which would contradict our assumption $A\notin Co-RE$. Thus, we conclude if $A\notin Co-RE$ and $A\reduces B$ then $B\notin Co-RE$.
+		\item[d.]We know that $HALT\notin Co-RE$ since we know $HALT\in RE$ and if $HALT\in Co-RE$ were to be true this would imply that $HALT\in R$ which we know is false (because we know that $HALT\notin R$) giving us a contradiction. Thus, by using c. we conclude that $HALT\notin Co-RE$ and $HALT\reduces ALWAYS\_HALT$ implies that $ALWAYS\_HALT\notin Co-RE$.
+	\end{enumerate}
+	\item[\textbf{(3)}]
+	\begin{enumerate}
+		\item[a.]We need to show a truth preserving reduction from $HALT$ to $ACCEPT$ where we have an algorithm $M_{f}$ that takes an input word $x$ and outputs a word $y$ such that if $x\in HALT$ then $y\in ACCEPT$ and if $x\notin HALT$ then $y\notin HALT$. Consider the following algorithm $M^{\prime}$:
+		\begin{align}
+			&\text{$M^{\prime}(\langle M\rangle, \langle w\rangle)$}\qquad\text{(where $M$ is a Turing machine, $w$ is an input word)}\nonumber\\
+			&\quad\text{1. Run $M$ on $w$.}\nonumber\\
+			&\quad\text{2. If $M$ accepts when run on $w$, then $M^{\prime}$ accepts.}\nonumber\\
+			&\quad\text{3. If $M$ rejects when run on $w$, then $M^{\prime}$ accepts.}\nonumber
+		\end{align}
+		Then we create the algorithm $M_{f}$ as follows:
+		\begin{align}
+			&\text{$M_f(\langle M\rangle, \langle w\rangle)$}\qquad\text{(where $M$ is a Turing machine, $w$ is an input word)}\nonumber\\
+			&\quad\text{1. Construct the Turing machine $M^{\prime}$.}\nonumber\\
+			&\quad\text{2. Output $\langle M^{\prime}\rangle, \langle w\rangle$.}\nonumber
+		\end{align}
+		Now if an input $w\in HALT$ then at one point $M$ must halt which means that it either rejects or accepts. When either happens then $M^{\prime}$ accepts which means $w\in ACCEPT$. Similarly, if an input $w\notin HALT$ then at no point $M$ will halt which means that $M^{\prime}$ will not halt (since step 1 will imply that $M^{\prime}$ also runs forever) which means that $w\notin ACEEPT$. Thus, $M_{f}$ is a truth preserving reduction from $HALT$ to $ACCEPT$ and we conclude that $HALT\reduces ACCEPT$.
+		\item[b.]From a. we know that $HALT\reduces ACCEPT$. Using (2)c. we also know that if if $A\notin Co-RE$ and $A\reduces B$ then $B\notin Co-RE$. Thus, we begin by noting that $HALT\notin Co-RE$ since if $HALT\in Co-RE$ were to be true then $HALT\in R$ would be true because we also know that $HALT\in RE$. This leads to a cotnradiction since $HALT\notin R$ which then means that we can deduce that $HALT\notin Co-RE$. Then using the statement from (2)c., since $HALT\notin Co-RE$ and $HALT\reduces ACCEPT$ we know that $ACCEPT\notin Co-RE$. Thus, we conclude that $ACCEPT\notin Co-RE$.
+	\end{enumerate}
+	\item[\textbf{(4)}]We know that the language $A$ has an enumerator say $E$. Then we can construct a Turing machine $M$ that takes in an input word $w$ and recognizes $A$ as follows:
+	\begin{align}
+		&\text{$M(\langle w\rangle)$:}\nonumber\\
+		&\quad\text{for each $w^{\prime}$ enumerated by $E$}&&\text{(i.e. we run $E$ and every time $E$ outputs a word $w^{\prime}$)}\nonumber\\
+		&\qquad\text{if $w^{\prime}$ equals $w$ then accept}&&\text{(i.e. $w$ appears in the output of $E$)}\nonumber\\
+		&\qquad\text{endif}\nonumber\\
+		&\quad\text{endforeach}\nonumber\\
+		&\text{end}\nonumber
+	\end{align}
+	Thus, if $w\in A$ then it must be enumerated by $E$ meaning at one point $w$ is equal to $w^{\prime}$ meaning we accept. If $w\notin A$ then it will not be enumerated by $E$ meaninig at no point will $w$ be equal to $w^{\prime}$ meaning we never accept. If $A$ is finite and $w\notin A$ then the for loop for $E$ is finite so we can either reject after the for loop completes or loop infinitely. If $A$ is infinite then $A$ will run infinitely as long as $w\notin A$. Either way, we see that we accept only if $w\in A$ meaning $M$ recognizes $A$. Therefore, we conclude that if a language $A$ has an enumerator, then $A\in RE$.
+	\item[\textbf{(5)}]
+	\begin{enumerate}
+		\item[a.]If $L\in R$ then there exists a Turing machine $M$ that decides wether a word $w\in\Sigma^{*}$, where $\Sigma$ is the alphabet for $M$, is in $L$ by either accepting or rejecting $w$. Thus, we can enumerate the words of $\Sigma^{*}$ in lexigraphic order using a Turing machine $E$ and then testing each word by running $M$. If $M$ accepts (meaning $w\in L$) then we print the word and if $M$ rejects (meaning $w\notin L$) then we move onto the next word. From this we see that $E$ prints all the words in $L$ such that shorter words are always printed before longer words. We note that $E$ may possibly run an infinite amount of time but the property will still hold. Therefore, we conclude that if $L\in R$ then it is nicely enumerable.
+		\item[b.]If $L$ is nicely enumerable then there exists a Turing machine $E$ that prints the words in $L$ in lexicographic order. We split the language $L$ to two cases. For case one, if $L$ is finite then there exists a Turing machine $M$ that can decide it by simply ``hardcoding'' every word in $L$ (which is possible since $L$ is finite) into $M$ and then running $M$. Thus, if $L$ is nicely enumerable and $L$ is finite then $L\in R$. For the second case, if $L$ is infinite then we consider a Turing machine $M$ that decides $L$ as follows. Upon receiving an input $w$, $M$ will use $E$ to start enumerating all the words in $L$ until some word $w^{\prime}$ that occurs lexicographically later than $w$ appears. This is bound to happen since $L$ is infinite. If $w$ appeared in the enumeration before $w^{\prime}$ occurred then $M$ will accept and if $w$ has not appeared in the enumeration before $w^{\prime}$ occurred then $M$ will reject. A check for whether the next lexicographic word after $w$ has appeared can be done by checking whether each word enumerated by $E$ is the same as $w$ and if an enumerated word is $w$ then the next word must be $w^{\prime}$. This way even if $L$ is infinite we see that we can decide whether a word is in $L$ and we can say that if $L$ is nicely enumerable and $L$ is infinite then $L\in R$. Combining the two cases together, we conclude if $L$ is nicely enumerable then $L\in R$.
+	\end{enumerate}
+	\item[\textbf{(6)}]
+	\begin{enumerate}
+		\item[a.]We begin by noting that if $M$ when run on $\lambda$ (i.e. $M(\lambda)$) does halt at some point it must do so in some $n$ number of steps after $M$ starts running on $\lambda$. Furthermore, since the halting problem is undecidable we know that this problem is also undecidable (if it weren't we could also solve $HALT$ using $M$). Thus, we must simulate $M$ on $\lambda$ for some $n$ steps. Consider the following algorithm $M_{w}$:
+		\begin{align}
+			&\text{$M_{w}(\langle M\rangle,\langle w\rangle)$:}\qquad\text{(where $M$ is a Turing machine, $w$ is an input word)}\nonumber\\
+			&\quad\text{1. $n=\left|w\right|$.}\nonumber\\
+			&\quad\text{2. Simulate $M(\lambda)$ for $n$ steps.}\nonumber\\
+			&\quad\text{3. If $M$ halts (accepts or rejects) on $\lambda$ in $n$ steps then $M_{w}$ rejects.}\nonumber\\
+			&\quad\text{4. If $M$ doesn't halt (doesn't accept or reject) on $\lambda$ in $n$ steps then $M_{w}$ accepts.}\nonumber
+		\end{align}
+		Then we create the algorithm $M^{\prime}$ as follows:
+		\begin{align}
+			&\text{$M^{\prime}(\langle M\rangle,\langle \{w\}\rangle)$:}\qquad\text{(where $M$ is a Turing machine, $w$ is set of input words)}\nonumber\\
+			&\quad\text{1. Construct the Turing machine $M_{w}$.}\nonumber\\
+			&\quad\text{2. If $\forall x\in w$ $M_w(\langle M\rangle,\langle x\rangle)$ accepts then $M^{\prime}$ halts}\nonumber\\
+			&\quad\text{3. If $\exists x\in w$ where $M_w(\langle M\rangle,\langle x\rangle)$ rejects then $M^{\prime}$ does not halt (by going into an infinite loop)}\nonumber\\
+			&\quad\text{4. Output $\langle M^{\prime}\rangle, \langle w\rangle$.}\nonumber
+		\end{align}
+		And then we create the reduction algorithm $M_{f}$ as follows:
+		\begin{align}
+			&\text{$M_{f}(\langle M\rangle,\langle \{w\}\rangle)$:}\qquad\text{(where $M$ is a Turing machine, $w$ is set of input words)}\nonumber\\
+			&\quad\text{1. Construct the Turing machine $M^{\prime}$ (which implicilty constructs the Turing machine $M_{w}$).}\nonumber\\
+			&\quad\text{2. Output $\langle M^{\prime}\rangle, \langle w\rangle$.}\nonumber
+		\end{align}
+		Thus, we see that $\langle M_{w}\rangle$ is the description of the Turing machine $M_{w}$ that satisfies the properties as asked in the question. Furthermore, $M_{f}$ is the reduction algorithm we will use to for b. to prove that $HALT_{\lambda}^{c}\reduces ALWAYS\_HALT$. Note that $M_{f}$ also uses an intermediary description as given by $M^{\prime}$.
+		\item[b.]To show that $HALT_{\lambda}^{c}\reduces ALWAYS\_HALT$ we need to show a truth preserving reduction from $HALT_{\lambda}^{c}$ to $ALWAYS\_HALT$ where we have an algorithm $M_{f}$ that takes an input word $x$ and outputs a word $y$ such that if $x\in HALT_{\lambda}^{c}$ then $y\in ALWAYS\_HALT$ and if $x\not HALT_{\lambda}^{c}$ then $y\notin ALWAYS\_HALT$. This algorithm is already given by $M_{f}$ as described in a., thus we only need to prove that it has the truth preserving property. If $M^{\prime}$ never enters an infinite loop (meaning $M_{w}$ always halts by always rejecting) then this means that $M^{\prime}$ always halts when run on $\{w\}$. Thus, if $\{w\}\in HALT_{\lambda}^{c}$ then $\{w\}\in ALWAYS\_HALT$. Conversely, if $M^{\prime}$ enters an infintie loop at some point when run on $\{w\}$ then $M^{\prime}$ will never halt since $M_{w}$ must have accepted at some point which means that $\{w\}\notin HALT_{\lambda}^{c}$ and in turn $\{w\}\notin ALWAYS\_HALT$. Thus, the algorithm $M_{f}$ is a truth preserving reduction from $HALT_{\lambda}^{c}$ to $ALWAYS\_HALT$.
+		\item[c.]We begin by noting that $HALT_{\lambda}\in RE$ as we can recognize it in a similar way we recognize $HALT$ by using the same Turing machine that identifies $HALT$ but modifying it such that it only runs on the empty input and accepts only if its halts on $\lambda$. This then implies that $HALT_{\lambda}\notin Co-RE$ which by definition means $HALT_{\lambda}^{c}\notin RE$ since if $HALT_{\lambda}\in Co-RE$ were to be true then $HALT_{\lambda}\in R$ would be true whcih then leads to a contradction since we know that $HALT_{\lambda}\notin R$. (Note: The fact that $HALT_{\lambda}\notin R$ was shown in class and is thus not proved here.) Now assume for the sake of contradiction that $ALWAYS\_HALT\in RE$. From the property that states that if $A\reduces B$ and $B\in RE$ then $A\in RE$ this would mean that $HALT_{\lambda}^{c}\in RE$ which in turn means that $HALT_{\lambda}\in Co-RE$. This is a contradiction to our initial claim that $ALWAYS\_HALT\in RE$ because we know that $HALT_{\lambda}\notin Co-RE$ (and $HALT_{\lambda}^{c}\notin RE$). Thus, we conclude that $ALWAYS\_HALT\notin RE$.
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}
